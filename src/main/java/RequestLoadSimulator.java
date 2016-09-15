@@ -26,7 +26,13 @@ public class RequestLoadSimulator {
 		List<RequestProcessor> executors = new ArrayList<RequestProcessor>();
 
 		for (long i = 0; i < NUMBER_OF_REQUESTS; i++) {
-			executors.add(new RequestProcessor(i));
+			RequestProcessor requestProcessor = new RequestProcessor(i, AVG_QUERIES_PER_REQUEST, AVG_QUERY_TIME_MILLIS, NTH_PRIME_TO_FIND, new Callback() {
+				@Override
+				public void execute() {
+					incrementNumComplete();
+				}
+			});
+			executors.add(requestProcessor);
 		}
 
 		System.out.println(NUMBER_OF_REQUESTS + " requests were created");
@@ -60,47 +66,4 @@ public class RequestLoadSimulator {
 		RequestLoadSimulator.class.notifyAll();
 	}
 
-	class RequestProcessor implements Callable<Long> {
-
-		private long workerNumber;
-
-		public RequestProcessor(long workerNumber) {
-			this.workerNumber = workerNumber;
-		}
-
-		@Override
-		public Long call() throws Exception {
-			StopWatch swTotal = new StopWatch();
-			swTotal.start();
-
-			for (int i = 0; i < AVG_QUERIES_PER_REQUEST; i++) {
-				//do the blocking call
-				doQuery(i);
-			}
-
-			//do some work
-			doSomeComputation();
-
-
-			long totalTime = swTotal.getTime();
-			System.out.println("Request " + workerNumber + " took " + swTotal.getTime() + " millis to complete");
-
-			incrementNumComplete();
-			return totalTime;
-		}
-
-		private void doQuery(int queryNumber) throws InterruptedException {
-			StopWatch sw = new StopWatch();
-			sw.start();
-			Thread.sleep(AVG_QUERY_TIME_MILLIS);
-//			System.out.println("Query " + workerNumber + "-" + queryNumber + " took " + sw.getTime() + " millis");
-		}
-
-		private void doSomeComputation() {
-			StopWatch sw = new StopWatch();
-			sw.start();
-			FindNthPrime.find(NTH_PRIME_TO_FIND);
-//			System.out.println("Computation " + workerNumber + " took " + sw.getTime() + " millis");
-		}
-	}
 }

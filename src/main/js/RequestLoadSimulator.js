@@ -1,7 +1,8 @@
-let StopWatch = require('./StopWatch.js');
-let FindNthPrime = require('./FindNthPrime.js');
+let StopWatch = require('./StopWatch');
+let RequestProcessor = require('./RequestProcessor');
 let q = require('q');
 let cluster = require('cluster');
+let os = require('os');
 
 const NUMBER_OF_REQUESTS = 512;
 const AVG_QUERIES_PER_REQUEST = 6;
@@ -16,64 +17,10 @@ function incrementNumComplete() {
 	numComplete++;
 }
 
-class RequestProcessor {
-	constructor(workerNumber) {
-		this.workerNumber = workerNumber;
-	}
-
-	call() {
-		let swTotal = new StopWatch();
-		swTotal.start();
-
-		var promises = [];
-		for (let i = 0; i < AVG_QUERIES_PER_REQUEST; i++) {
-			promises.push(this.doQuery(i));
-		}
-
-		let self = this;
-		return q.all(promises)
-				.then(function() {
-					//do some work
-					self.doSomeComputation();
-
-					let totalTime = swTotal.getTime();
-					console.log("Request " + self.workerNumber + " took " + swTotal.getTime() + " millis to complete");
-
-					incrementNumComplete();
-
-					return totalTime;
-				});
-	}
-
-	doQuery(queryNumber) {
-		let defer = q.defer();
-
-		let sw = new StopWatch();
-		sw.start();
-
-		let self = this;
-		setTimeout(function() {
-			//console.log("Query " + self.workerNumber + "-" + queryNumber + " took " + sw.getTime() + " millis");
-			defer.resolve();
-		}, AVG_QUERY_TIME_MILLIS);
-
-		return defer.promise;
-	}
-
-	doSomeComputation() {
-		let sw = new StopWatch();
-		sw.start();
-
-		FindNthPrime.find(NTH_PRIME_TO_FIND);
-
-		//console.log("Computation " + this.workerNumber + " took " + sw.getTime() + " millis");
-	}
-}
-
 function setupSimulation() {
 	if (cluster.isMaster) {
 
-		let numCPUs = require('os').cpus().length;
+		let numCPUs = os.cpus().length;
 
 		console.log(numCPUs+' CPUs detected');
 
@@ -119,7 +66,9 @@ function setupSimulation() {
 			let executors = [];
 
 			for (let i = message.startingIndex; i < message.endingIndex; i++) {
-				executors.push(new RequestProcessor(i));
+				executors.push(new RequestProcessor(i, AVG_QUERIES_PER_REQUEST, AVG_QUERY_TIME_MILLIS, NTH_PRIME_TO_FIND, function() {
+					incrementNumComplete();
+				}));
 			}
 
 			console.log(executors.length + " requests were created");
