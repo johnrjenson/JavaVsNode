@@ -22,7 +22,7 @@ function setupSimulation() {
 
 		let numCPUs = os.cpus().length;
 
-		console.log(numCPUs+' CPUs detected');
+		console.log(numCPUs+' CPUs detected. Creating '+numCPUs+' workers');
 
 		let sw = new StopWatch();
 		sw.start();
@@ -35,7 +35,8 @@ function setupSimulation() {
 			let worker = cluster.fork();
 			worker.send({
 				startingIndex: startingIndex,
-				endingIndex: startingIndex + requestsPerCpu
+				endingIndex: startingIndex + requestsPerCpu,
+				workerNumber: worker.id
 			});
 
 			startingIndex += requestsPerCpu;
@@ -71,7 +72,7 @@ function setupSimulation() {
 				}));
 			}
 
-			console.log(executors.length + " requests were created");
+			console.log(executors.length + " requests were created for worker " + message.workerNumber);
 
 			runSimulation(executors);
 		});
