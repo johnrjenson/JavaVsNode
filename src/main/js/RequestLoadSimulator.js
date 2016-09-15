@@ -9,7 +9,7 @@ const AVG_QUERIES_PER_REQUEST = 6;
 const AVG_QUERY_TIME_MILLIS = 60;
 
 // increase this to make the computation more difficult. 1500 is about 77 millis worth of work.
-const NTH_PRIME_TO_FIND = 4000;
+const NTH_PRIME_TO_FIND = 700;
 
 var numComplete = 0;
 

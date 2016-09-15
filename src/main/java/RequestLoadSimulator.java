@@ -6,13 +6,13 @@ import java.util.concurrent.*;
 
 public class RequestLoadSimulator {
 
-	public static final long NUMBER_OF_REQUESTS = 512;
-	public static final int THREAD_POOL_SIZE = 300;
+	public static final int NUMBER_OF_REQUESTS = 512;
+	public static final int THREAD_POOL_SIZE = 150;
 	public static final int AVG_QUERIES_PER_REQUEST = 6;
 	public static final int AVG_QUERY_TIME_MILLIS = 60;
 
 	// increase this to make the computation more difficult. 1500 is about 77 millis worth of work.
-	public static final int NTH_PRIME_TO_FIND = 4000;
+	public static final int NTH_PRIME_TO_FIND = 700;
 
 	private int numComplete = 0;
 
@@ -25,7 +25,7 @@ public class RequestLoadSimulator {
 	private List<RequestProcessor> setupSimulation() throws InterruptedException {
 		List<RequestProcessor> executors = new ArrayList<RequestProcessor>();
 
-		for (long i = 0; i < NUMBER_OF_REQUESTS; i++) {
+		for (int i = 0; i < NUMBER_OF_REQUESTS; i++) {
 			RequestProcessor requestProcessor = new RequestProcessor(i, AVG_QUERIES_PER_REQUEST, AVG_QUERY_TIME_MILLIS, NTH_PRIME_TO_FIND, new Callback() {
 				@Override
 				public void execute() {

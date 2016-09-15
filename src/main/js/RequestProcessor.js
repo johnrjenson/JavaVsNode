@@ -55,7 +55,7 @@ class RequestProcessor {
 		let sw = new StopWatch();
 		sw.start();
 
-		FindNthPrime.find(this.nthPrimeToFind);
+		FindNthPrime.find(this.nthPrimeToFind + this.workerNumber);
 
 		//console.log("Computation " + this.workerNumber + " took " + sw.getTime() + " millis");
 	}
