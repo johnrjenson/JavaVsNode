@@ -6,6 +6,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "fs": "0.0.1-security",
     "os": "^0.1.1",
     "q": "^1.4.1"
   }

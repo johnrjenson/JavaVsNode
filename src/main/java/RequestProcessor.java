@@ -6,14 +6,16 @@ class RequestProcessor implements Callable<Long> {
 	private int numQueries;
 	private long queryTime;
 	private int nthPrimeToFind;
+	private String pathToTestFile;
 	private Callback onComplete;
 	private StopWatch swTotal;
 
-	public RequestProcessor(int workerNumber, int numQueries, long queryTime, int nthPrimeToFind, Callback onComplete) {
+	public RequestProcessor(int workerNumber, int numQueries, long queryTime, int nthPrimeToFind, String pathToTestFile, Callback onComplete) {
 		this.workerNumber = workerNumber;
 		this.numQueries = numQueries;
 		this.queryTime = queryTime;
 		this.nthPrimeToFind = nthPrimeToFind;
+		this.pathToTestFile = pathToTestFile;
 		this.onComplete = onComplete;
 		this.swTotal = new StopWatch();
 		this.swTotal.start();
@@ -28,6 +30,10 @@ class RequestProcessor implements Callable<Long> {
 
 		//do some work
 		doSomeComputation();
+
+		if(this.pathToTestFile != null) {
+			getEveryNthChar();
+		}
 
 
 		long totalTime = swTotal.getTime();
@@ -50,5 +56,12 @@ class RequestProcessor implements Callable<Long> {
 		sw.start();
 		FindNthPrime.find(this.nthPrimeToFind + this.workerNumber);
 //			System.out.println("Computation " + workerNumber + " took " + sw.getTime() + " millis");
+	}
+
+	private void getEveryNthChar() {
+		StopWatch sw = new StopWatch();
+		sw.start();
+		String result = FindNthCharInFile.getEveryNthChar(this.pathToTestFile, 50000 + this.workerNumber);
+//		System.out.println("Result of nth char for worker " + workerNumber + " took " + sw.getTime() + " millis. This is the result " + result);
 	}
 }
