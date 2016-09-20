@@ -8,16 +8,8 @@ const NUMBER_OF_REQUESTS = 512;
 const NUMBER_OF_PROCESSES = null; // defaults to the number of CPUs on the machine
 const AVG_QUERIES_PER_REQUEST = 6;
 const AVG_QUERY_TIME_MILLIS = 60;
-
-// increase this to make the computation more difficult. 1500 is about 77 millis worth of work.
-const NTH_PRIME_TO_FIND = 700;
-const PATH_TO_TEST_FILE = '10mb.txt';
-
-var numComplete = 0;
-
-function incrementNumComplete() {
-	numComplete++;
-}
+const NTH_PRIME_TO_FIND = 700; // increase this to make the computation more difficult. 1500 is about 77 millis worth of work.
+const PATH_TO_TEST_FILE = '1mb.txt';
 
 function setupSimulation() {
 	if (cluster.isMaster) {
@@ -80,9 +72,7 @@ function setupSimulation() {
 			let executors = [];
 
 			for (let i = message.startingIndex; i < message.endingIndex; i++) {
-				executors.push(new RequestProcessor(i, AVG_QUERIES_PER_REQUEST, AVG_QUERY_TIME_MILLIS, NTH_PRIME_TO_FIND, PATH_TO_TEST_FILE, function() {
-					incrementNumComplete();
-				}));
+				executors.push(new RequestProcessor(i, AVG_QUERIES_PER_REQUEST, AVG_QUERY_TIME_MILLIS, NTH_PRIME_TO_FIND, PATH_TO_TEST_FILE));
 			}
 
 			console.log(executors.length + " requests were created for worker " + message.workerNumber);

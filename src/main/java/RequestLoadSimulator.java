@@ -7,15 +7,11 @@ import java.util.concurrent.*;
 public class RequestLoadSimulator {
 
 	public static final int NUMBER_OF_REQUESTS = 512;
-	public static final int THREAD_POOL_SIZE = 150;
+	public static final int THREAD_POOL_SIZE = 70;
 	public static final int AVG_QUERIES_PER_REQUEST = 6;
 	public static final int AVG_QUERY_TIME_MILLIS = 60;
-
-	// increase this to make the computation more difficult. 1500 is about 77 millis worth of work.
-	public static final int NTH_PRIME_TO_FIND = 700;
-	public static final String PATH_TO_TEST_FILE = "10mb.txt";
-
-	private int numComplete = 0;
+	public static final int NTH_PRIME_TO_FIND = 700; // increase this to make the computation more difficult. 1500 is about 77 millis worth of work.
+	public static final String PATH_TO_TEST_FILE = "1mb.txt";
 
 	public static void main(String[] args) throws InterruptedException {
 		RequestLoadSimulator requestLoadSimulator = new RequestLoadSimulator();
@@ -66,6 +62,8 @@ public class RequestLoadSimulator {
 			System.exit(0);
 		}
 	}
+
+	private int numComplete = 0;
 
 	private void incrementNumComplete() {
 		synchronized (RequestLoadSimulator.class) {

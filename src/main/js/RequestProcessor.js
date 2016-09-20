@@ -32,7 +32,9 @@ class RequestProcessor {
 					self.getEveryNthChar().then(function() {
 								let totalTime = swTotal.getTime();
 								console.log("Request " + self.workerNumber + " took " + swTotal.getTime() + " millis to complete");
-								self.onComplete();
+								if(self.onComplete){
+									self.onComplete();
+								}
 								defer.resolve(totalTime);
 							});
 				});

@@ -39,7 +39,9 @@ class RequestProcessor implements Callable<Long> {
 		long totalTime = swTotal.getTime();
 		System.out.println("Request " + this.workerNumber + " took " + this.swTotal.getTime() + " millis to complete");
 
-		this.onComplete.execute();
+		if(this.onComplete != null) {
+			this.onComplete.execute();
+		}
 
 		return totalTime;
 	}
