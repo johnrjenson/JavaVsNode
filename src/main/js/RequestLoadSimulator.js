@@ -5,6 +5,7 @@ let cluster = require('cluster');
 let os = require('os');
 
 const NUMBER_OF_REQUESTS = 512;
+const NUMBER_OF_PROCESSES = 2; // defaults to the number of CPUs on the machine
 const AVG_QUERIES_PER_REQUEST = 6;
 const AVG_QUERY_TIME_MILLIS = 60;
 
@@ -22,16 +23,19 @@ function setupSimulation() {
 
 		let numCPUs = os.cpus().length;
 
-		console.log(numCPUs+' CPUs detected. Creating '+numCPUs+' workers');
+		let numProcesses = NUMBER_OF_PROCESSES || numCPUs;
+
+		console.log(numCPUs+' CPUs detected. Creating '+numProcesses+' workers');
+
+		let startingIndex = 0;
+		let requestsPerCpu = Math.floor(NUMBER_OF_REQUESTS / numProcesses);
+
 
 		let sw = new StopWatch();
 		sw.start();
 
-		let startingIndex = 0;
-		let requestsPerCpu = Math.floor(NUMBER_OF_REQUESTS / numCPUs);
-
 		// start worker processes.
-		for (var i = 0; i < numCPUs; i++) {
+		for (var i = 0; i < numProcesses; i++) {
 			let worker = cluster.fork();
 			worker.send({
 				startingIndex: startingIndex,
@@ -46,7 +50,7 @@ function setupSimulation() {
 		cluster.on('message', function(worker, message, handle) {
 			if(message.done) {
 				numWorkersComplete++;
-				if(numWorkersComplete >= numCPUs) {
+				if(numWorkersComplete >= numProcesses) {
 					let totalMillis = sw.getTime();
 
 					console.log("The program took "+totalMillis+" millis to process "+NUMBER_OF_REQUESTS+" requests which is "+NUMBER_OF_REQUESTS/totalMillis*1000+" requests per second");
