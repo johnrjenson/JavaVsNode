@@ -8,8 +8,8 @@ const NUMBER_OF_REQUESTS = 512;
 const NUMBER_OF_PROCESSES = null; // defaults to the number of CPUs on the machine
 const AVG_QUERIES_PER_REQUEST = 6;
 const AVG_QUERY_TIME_MILLIS = 60;
-const NTH_PRIME_TO_FIND = 700; // increase this to make the computation more difficult. 1500 is about 77 millis worth of work.
-const PATH_TO_TEST_FILE = '1mb.txt';
+const NTH_PRIME_TO_FIND = 250; // increase this to make the computation more difficult. 1500 is about 77 millis worth of work.
+const PATH_TO_TEST_FILE = "1mb.txt";
 
 function setupSimulation() {
 	if (cluster.isMaster) {

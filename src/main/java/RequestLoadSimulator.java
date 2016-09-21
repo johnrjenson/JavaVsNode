@@ -10,7 +10,7 @@ public class RequestLoadSimulator {
 	public static final int THREAD_POOL_SIZE = 70;
 	public static final int AVG_QUERIES_PER_REQUEST = 6;
 	public static final int AVG_QUERY_TIME_MILLIS = 60;
-	public static final int NTH_PRIME_TO_FIND = 700; // increase this to make the computation more difficult. 1500 is about 77 millis worth of work.
+	public static final int NTH_PRIME_TO_FIND = 250; // increase this to make the computation more difficult. 1500 is about 77 millis worth of work.
 	public static final String PATH_TO_TEST_FILE = "1mb.txt";
 
 	public static void main(String[] args) throws InterruptedException {

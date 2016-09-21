@@ -9,6 +9,7 @@ class FindNthPrime {
 				primeCount++;
 			}
 		}
+		//console.log(n+'th prime '+currentNumber);
 		return currentNumber;
 	}
 
