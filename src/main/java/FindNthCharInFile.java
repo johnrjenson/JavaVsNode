@@ -1,7 +1,9 @@
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 public class FindNthCharInFile {
-	public static String getEveryNthChar(String pathToFile, int n) {
+	public static String getEveryNthChar(String pathToFile, int n) throws IOException {
 		String fileContents = getFileContents(pathToFile);
 
 		StringBuilder result = new StringBuilder();
@@ -12,18 +14,19 @@ public class FindNthCharInFile {
 		return result.toString();
 	}
 
-	private static String getFileContents(String pathToFile) {
-		try(BufferedReader in = new BufferedReader(new FileReader(pathToFile))) {
+	private static String getFileContents(String pathToFile) throws IOException {
+		try(RandomAccessFile aFile = new RandomAccessFile(pathToFile, "r"); FileChannel inChannel = aFile.getChannel()) {
+			long fileSize = inChannel.size();
+			ByteBuffer buffer = ByteBuffer.allocate((int) fileSize);
+			inChannel.read(buffer);
+			buffer.flip();
 			StringBuilder sb = new StringBuilder();
-			String lineIn = in.readLine();
-			while(lineIn != null) {
-				sb.append(lineIn).append('\n');
-				lineIn = in.readLine();
+			for (int i = 0; i < fileSize; i++) {
+				sb.append((char) buffer.get());
 			}
 			return sb.toString();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw e;
 		}
-		return null;
 	}
 }

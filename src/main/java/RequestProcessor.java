@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 class RequestProcessor implements Callable<Long> {
@@ -60,7 +61,7 @@ class RequestProcessor implements Callable<Long> {
 //			System.out.println("Computation " + workerNumber + " took " + sw.getTime() + " millis");
 	}
 
-	private void getEveryNthChar() {
+	private void getEveryNthChar() throws IOException {
 		StopWatch sw = new StopWatch();
 		sw.start();
 		String result = FindNthCharInFile.getEveryNthChar(this.pathToTestFile, 50000 + this.workerNumber);
