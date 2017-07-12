@@ -1,5 +1,10 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 
 class RequestProcessor implements Callable<Long> {
 
@@ -24,10 +29,27 @@ class RequestProcessor implements Callable<Long> {
 
 	@Override
 	public Long call() throws Exception {
+        final int[] count = {0};
+        final long totalCount = this.numQueries;
+
+        final CompletableFuture<Void> result = new CompletableFuture<Void>();
+
+        final Object sync = new Object();
+        final Timer timer = new Timer();
 		for (int i = 0; i < this.numQueries; i++) {
-			//do the blocking call
-			doQuery(i);
+			doQuery(timer, i).thenRun(new Runnable() {
+                public void run() {
+                    synchronized (sync) {
+                        count[0]++;
+                    }
+                    if (count[0] == totalCount) {
+                        result.complete(null);
+                    }
+                }
+            });
 		}
+
+		result.get();
 
 		//do some work
 		doSomeComputation();
@@ -47,11 +69,17 @@ class RequestProcessor implements Callable<Long> {
 		return totalTime;
 	}
 
-	private void doQuery(int queryNumber) throws InterruptedException {
-		StopWatch sw = new StopWatch();
-		sw.start();
-		Thread.sleep(this.queryTime);
-//			System.out.println("Query " + workerNumber + "-" + queryNumber + " took " + sw.getTime() + " millis");
+	private CompletableFuture<Void> doQuery(Timer timer, int queryNumber) throws InterruptedException {
+		final CompletableFuture<Void> responseFuture = new CompletableFuture<Void>();
+
+		timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                responseFuture.complete(null);
+            }
+        }, 0, this.queryTime);
+
+		return responseFuture;
 	}
 
 	private void doSomeComputation() {
