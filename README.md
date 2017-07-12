@@ -1,6 +1,10 @@
 # JavaVsNode
 
 This is a project that is designed to analyze the efficiency of both Java and JavaScript when processing a large number of requests. 
+This is supporting code for my blog post [Performance Comparison: Java vs Node](https://www.tandemseven.com/blog/performance-java-vs-node/). In my blog post I provide runtime results of this implementation as well as the justification for the implementation choices that I made. 
+In short, I chose to simulate blocking IO for the Java implementation. Some may argue that using blocking IO isn’t a fair comparison of Java’s performance, but here is why I think it is both accurate and fair. First, Java’s JDBC spec remains a blocking spec. 
+That means that whenever anyone connects to a relational database using a standard JDBC driver, they have to block. Secondly, Apache Tomcat 8.5 finished implementing the first non-blocking servlet spec only seven months ago in June of 2016, so that means that the overwhelming majority of production Java applications still block when they do IO. 
+So since Java is being used in a blocking way currently by most organizations, I feel it is the most representative of the Java to block in these simulations as well. 
 
 Open project from pom.xml file in the Java IDE of choice
 
