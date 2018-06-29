@@ -8,7 +8,7 @@ So since Java is being used in a blocking way currently by most organizations, I
 
 Open project from pom.xml file in the Java IDE of choice
 
-##Java
+## Java
 
 Open src/main/java/RequestLoadSimulator.java
 
@@ -23,7 +23,7 @@ Setup your simulation by setting the following constants at top of RequestLoadSi
 
 Run src/main/java/RequestLoadSimulator.java
 
-##Node
+## Node
 
 Open src/main/js/RequestLoadSimulator.js
 
