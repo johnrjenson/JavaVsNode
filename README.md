@@ -36,4 +36,4 @@ Setup your simulation by setting the following constants at top of RequestLoadSi
 `NTH_PRIME_TO_FIND` - the computational load that will be processed on each request. Increase this to make the computation more difficult. 1500 is about 77 millis worth of work. 
 `PATH_TO_TEST_FILE` - point the code to a file that you want it to load and process on each request. The bigger the file, the more the IO and the more CPU will be used to process it. 
 
-Run src/main/java/RequestLoadSimulator.java
+Run src/main/js/RequestLoadSimulator.js
