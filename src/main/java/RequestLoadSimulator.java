@@ -11,7 +11,7 @@ public class RequestLoadSimulator {
 	public static final int AVG_QUERIES_PER_REQUEST = 6;
 	public static final int AVG_QUERY_TIME_MILLIS = 60;
 	public static final int NTH_PRIME_TO_FIND = 250; // increase this to make the computation more difficult. 1500 is about 77 millis worth of work.
-	public static final String PATH_TO_TEST_FILE = "1mb.txt";
+	public static final String PATH_TO_TEST_FILE = "5mb.txt";
 
 	public static void main(String[] args) throws InterruptedException {
 		RequestLoadSimulator requestLoadSimulator = new RequestLoadSimulator();
@@ -23,12 +23,7 @@ public class RequestLoadSimulator {
 		List<RequestProcessor> executors = new ArrayList<RequestProcessor>();
 
 		for (int i = 0; i < NUMBER_OF_REQUESTS; i++) {
-			RequestProcessor requestProcessor = new RequestProcessor(i, AVG_QUERIES_PER_REQUEST, AVG_QUERY_TIME_MILLIS, NTH_PRIME_TO_FIND, PATH_TO_TEST_FILE, new Callback() {
-				@Override
-				public void execute() {
-					incrementNumComplete();
-				}
-			});
+			RequestProcessor requestProcessor = new RequestProcessor(i, AVG_QUERIES_PER_REQUEST, AVG_QUERY_TIME_MILLIS, NTH_PRIME_TO_FIND, PATH_TO_TEST_FILE, null);
 			executors.add(requestProcessor);
 		}
 
@@ -45,32 +40,16 @@ public class RequestLoadSimulator {
 		ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 		executorService.invokeAll(executors);
 
-		synchronized (RequestLoadSimulator.class) {
-			while (numComplete < NUMBER_OF_REQUESTS) {
-				RequestLoadSimulator.class.wait();
-			}
-			long totalMillis = sw.getTime();
-			System.out.println();
-			System.out.println("NUMBER_OF_REQUESTS: "+NUMBER_OF_REQUESTS);
-			System.out.println("THREAD_POOL_SIZE: "+THREAD_POOL_SIZE);
-			System.out.println("AVG_QUERIES_PER_REQUEST: "+AVG_QUERIES_PER_REQUEST);
-			System.out.println("AVG_QUERY_TIME_MILLIS: "+AVG_QUERY_TIME_MILLIS);
-			System.out.println("NTH_PRIME_TO_FIND: "+NTH_PRIME_TO_FIND);
-			System.out.println("PATH_TO_TEST_FILE: "+PATH_TO_TEST_FILE);
-			System.out.println();
-			System.out.println("The program took "+totalMillis+" millis to process "+NUMBER_OF_REQUESTS+" requests which is "+new BigDecimal(((float)NUMBER_OF_REQUESTS/(float)totalMillis*(float)1000)).round(MathContext.DECIMAL32)+" requests per second");
-			System.exit(0);
-		}
+		long totalMillis = sw.getTime();
+		System.out.println();
+		System.out.println("NUMBER_OF_REQUESTS: "+NUMBER_OF_REQUESTS);
+		System.out.println("THREAD_POOL_SIZE: "+THREAD_POOL_SIZE);
+		System.out.println("AVG_QUERIES_PER_REQUEST: "+AVG_QUERIES_PER_REQUEST);
+		System.out.println("AVG_QUERY_TIME_MILLIS: "+AVG_QUERY_TIME_MILLIS);
+		System.out.println("NTH_PRIME_TO_FIND: "+NTH_PRIME_TO_FIND);
+		System.out.println("PATH_TO_TEST_FILE: "+PATH_TO_TEST_FILE);
+		System.out.println();
+		System.out.println("The program took "+totalMillis+" millis to process "+NUMBER_OF_REQUESTS+" requests which is "+new BigDecimal(((float)NUMBER_OF_REQUESTS/(float)totalMillis*(float)1000)).round(MathContext.DECIMAL32)+" requests per second");
+		System.exit(0);
 	}
-
-	private int numComplete = 0;
-
-	private void incrementNumComplete() {
-		synchronized (RequestLoadSimulator.class) {
-			numComplete++;
-		}
-
-		RequestLoadSimulator.class.notifyAll();
-	}
-
 }
