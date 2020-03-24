@@ -75,7 +75,7 @@ function setupSimulation() {
 				executors.push(new RequestProcessor(i, AVG_QUERIES_PER_REQUEST, AVG_QUERY_TIME_MILLIS, NTH_PRIME_TO_FIND, PATH_TO_TEST_FILE));
 			}
 
-			console.log(executors.length + " requests were created for worker " + message.workerNumber);
+			// console.log(executors.length + " requests were created for worker " + message.workerNumber);
 
 			runSimulation(executors);
 		});

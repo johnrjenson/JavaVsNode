@@ -32,7 +32,7 @@ public class RequestLoadSimulator {
 			executors.add(requestProcessor);
 		}
 
-		System.out.println(NUMBER_OF_REQUESTS + " requests were created");
+		// System.out.println(NUMBER_OF_REQUESTS + " requests were created");
 
 		return executors;
 	}
