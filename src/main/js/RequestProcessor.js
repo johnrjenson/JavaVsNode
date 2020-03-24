@@ -31,7 +31,7 @@ class RequestProcessor {
 					self.doSomeComputation();
 					self.getEveryNthChar().then(function() {
 								let totalTime = swTotal.getTime();
-								console.log("Request " + self.workerNumber + " took " + swTotal.getTime() + " millis to complete");
+								// console.log("Request " + self.workerNumber + " took " + swTotal.getTime() + " millis to complete");
 								if(self.onComplete){
 									self.onComplete();
 								}
